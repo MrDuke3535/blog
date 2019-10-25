@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>Spring boot 视图解析器</title>
+</head>
+<body>
+    <h1>测试试图解析器</h1>
+<a th:href="@{http://www.aybss.cn}">链接</a>
+<a th:href="@{/login}" th:unless="${session.user==null}">条件</a>
+    <br>
+<tr th:each="user:${users}">
+    <td th:text="${user.username}"></td>
+    <td th:text="${user.password}"></td>
+    <td th:text="${user.note}"></td>
+</tr>
+<br>
+<!--<b th:text="#{cn.aybss.title}"></b>-->
+<!--<b th:text="#{cn.aybss.password}"></b>-->
+</body>
+</html>

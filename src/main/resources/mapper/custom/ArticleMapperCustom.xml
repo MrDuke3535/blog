@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+        namespace="cn.aybss.blog.mapper.custom.ArticleMapperCustom">
+    <sql id="whereArticle">
+        <where>1=1
+            <if test="status != null">
+                and article_status=#{status}
+            </if>
+            <if test="post != null">
+                and article_post=#{post}
+            </if>
+        </where>
+    </sql>
+    <sql id="whereArticleCustom">
+        <where>1=1
+            <if test="articleStatus != null">
+                and article_status=#{articleStatus}
+            </if>
+            <if test="articlePost != null">
+                and article_post=#{articlePost}
+            </if>
+        </where>
+    </sql>
+
+    <select id="findPageArticle"
+            resultType="cn.aybss.blog.model.domain.ArticleCustom" parameterType="cn.aybss.blog.model.domain.ArticleCustom">
+        SELECT ma.*,
+        GROUP_CONCAT(distinct mc.category_name ) AS categorysName,
+        GROUP_CONCAT(distinct mc.category_url ) AS categorysUrl,
+        GROUP_CONCAT(distinct mt.tag_name ) AS tagsName,
+        GROUP_CONCAT(distinct mt.tag_url ) AS tagsUrl
+        FROM
+        mayday_article ma
+        LEFT JOIN mayday_article_category mac ON ma.id = mac.article_id
+        LEFT JOIN mayday_category mc ON mc.category_id = mac.category_id
+        LEFT JOIN mayday_article_tag mat ON ma.id = mat.article_id
+        LEFT JOIN mayday_tag mt ON mt.tag_id = mat.tag_id
+        <include refid="whereArticleCustom"></include>
+        GROUP BY
+        ma.id ORDER BY article_updatetime DESC,article_newstime DESC
+    </select>
+
+    <select id="findByArticleUrl" parameterType="String" resultType="cn.aybss.blog.model.domain.ArticleCustom">
+		SELECT
+			ma.*,
+			GROUP_CONCAT(distinct mc.category_name ) AS categorysName,
+			GROUP_CONCAT(distinct mc.category_url ) AS categorysUrl,
+			GROUP_CONCAT(distinct mt.tag_name ) AS tagsName,
+			GROUP_CONCAT(distinct mt.tag_url ) AS tagsUrl
+			FROM
+			mayday_article ma
+			LEFT JOIN mayday_article_category mac ON ma.id = mac.article_id
+			LEFT JOIN mayday_category mc ON mc.category_id = mac.category_id
+			LEFT JOIN mayday_article_tag mat ON ma.id = mat.article_id
+			LEFT JOIN mayday_tag mt ON mt.tag_id = mat.tag_id
+			WHERE article_url=#{articleUrl}
+			GROUP BY ma.id
+	</select>
+
+    <select id="findDateAndCount" resultType="cn.aybss.blog.model.dto.ArchiveBo">
+select DATE_FORMAT(article_newstime, '%Y年%m月') as date, count(*) as count from mayday_article
+	where article_post = 'post' and article_status = 0
+	group by date order by date desc
+    </select>
+
+    <select id="findAllArticle"
+            resultType="articleCustom">
+        SELECT * FROM mayday_article a
+        <include refid="whereArticle"></include>
+    </select>
+
+    <select id="countByStatus" resultType="integer">
+        SELECT COUNT(*) FROM mayday_article
+        <include refid="whereArticle"></include>
+    </select>
+
+    <select id="findByArticleId" resultType="articleCustom" parameterType="Integer">
+	SELECT
+a.id,a.user_id,a.article_content,a.article_content_md,a.article_newstime,a.article_summary,a.article_thumbnail,a.article_title,article_type,a.article_comment,a.article_url
+FROM mayday_article a
+WHERE a.id=#{id}
+	</select>
+
+    <select id="findRepeatByUrl" parameterType="String" resultType="Integer">
+	SELECT COUNT(*) FROM mayday_article WHERE article_url = #{articleUrl}
+	</select>
+
+    <update id="updateStatus" parameterType="int">
+	update mayday_article set article_status=#{status} where id = #{id}
+	</update>
+
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+        namespace="cn.aybss.blog.mapper.generator.UserMapper">
+
+    <insert id="insert" parameterType="user">
+        insert into mayday_user(user_id,login_enable,login_error,login_last_time,user_portrait,
+        user_explain,user_display_name,user_email,user_name,user_pwd) values(#{userId},#{loginEnable},#{loginError},#{loginLastTime},
+        #{userPortrait},#{userExplain},#{userDisplayName},#{userEmail},#{username},#{userPwd})
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="user">
+        update mayday_user
+        <set>
+            <if test="loginEnable != null">
+                login_enable = #{loginEnable,jdbcType=VARCHAR},
+            </if>
+            <if test="loginError != null">
+                login_error = #{loginError,jdbcType=INTEGER},
+            </if>
+            <if test="loginLastTime != null">
+                login_last_time = #{loginLastTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="userPortrait != null">
+                user_portrait = #{userPortrait,jdbcType=VARCHAR},
+            </if>
+            <if test="userExplain != null">
+                user_explain = #{userExplain,jdbcType=VARCHAR},
+            </if>
+            <if test="userDisplayName != null">
+                user_display_name = #{userDisplayName,jdbcType=VARCHAR},
+            </if>
+            <if test="userEmail != null">
+                user_email = #{userEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null">
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="userPwd != null">
+                user_pwd = #{userPwd,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where user_id = #{userId,jdbcType=INTEGER}
+    </update>
+
+
+</mapper>

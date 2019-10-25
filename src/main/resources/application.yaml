@@ -1,0 +1,39 @@
+server: 
+  port: 8081
+  servlet:
+    jsp:
+      class-name:
+logging:
+    level:
+        org.springframework: info
+        data: DEBUG
+        security: DEBUG
+#    config: classpath:logback-spring.xml
+spring:
+  mvc:
+    static-path-pattern: /**
+  thymeleaf:
+    servlet:
+      content-type: text/html
+    encoding: UTF-8
+    cache: false
+  datasource:
+         type: com.alibaba.druid.pool.DruidDataSource
+         url: jdbc:mysql://127.0.0.1:3306/blog?serverTimezone=UTC&charcaterEncoding=utf8&useUincode=true&useSSL=false
+         username: root
+         password: 980912
+         driver-class-name: com.mysql.cj.jdbc.Driver
+mybatis:
+  typeAliasesPackage: cn.aybss.blog.model.domain
+  mapperLocations: classpath:mapper/*/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+cn:
+  aybss:
+    title: 噜啦噜啦咧
+    password: 1234
